@@ -10,34 +10,33 @@ datasource db {
 model user {
   id          BigInt    @id(map: "User_pkey")
   name        String    @db.VarChar
-  student     Boolean
-  coordinator Boolean
+  coordinator Boolean   @default(false)
+  password    String?
   reserve     reserve[]
   space       space[]
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model reserve {
-  id                         BigInt    @id @default(autoincrement())
-  name                       String
+  id                         BigInt   @id @default(autoincrement())
   student                    BigInt[]
-  status                     Boolean?
-  coordenator                BigInt?
+  coordenator                BigInt
   descripition               String?
-  space                      BigInt?
-  start                      DateTime? @db.Time(6)
-  end                        DateTime? @db.Time(6)
-  user                       user?     @relation(fields: [coordenator], references: [id], onDelete: NoAction)
-  space_reserve_spaceTospace space?    @relation("reserve_spaceTospace", fields: [space], references: [id], onDelete: NoAction)
+  start                      DateTime @db.Time(6)
+  end                        DateTime @db.Time(6)
+  space                      Int?     @db.SmallInt
+  status                     Int      @default(0) @db.SmallInt
+  user                       user     @relation(fields: [coordenator], references: [id], onDelete: NoAction)
+  space_reserve_spaceTospace space?   @relation("reserve_spaceTospace", fields: [space], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model space {
-  id                           BigInt    @id @default(autoincrement())
+  id                           Int       @id @default(autoincrement()) @db.SmallInt
   name                         String
   opening                      DateTime  @db.Time(6)
   closing                      DateTime  @db.Time(6)
-  responsable                  BigInt?
+  responsable                  BigInt
   reserve_reserve_spaceTospace reserve[] @relation("reserve_spaceTospace")
-  user                         user?     @relation(fields: [responsable], references: [id], onDelete: NoAction)
+  user                         user      @relation(fields: [responsable], references: [id], onDelete: NoAction)
 }
