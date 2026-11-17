@@ -37,6 +37,7 @@ model space {
   opening                      DateTime  @db.Time(6)
   closing                      DateTime  @db.Time(6)
   responsable                  BigInt
+  opening_days                 Int[]     @db.SmallInt
   reserve_reserve_spaceTospace reserve[] @relation("reserve_spaceTospace")
   user                         user      @relation(fields: [responsable], references: [id], onDelete: NoAction)
 }
